@@ -1,0 +1,8 @@
+{
+  "welcomeText" : "Hi welcome",
+  "@welcomeText" : {
+    "description": "This is a sample text to show as a welcome text"
+  },
+  "oneMoreText" : "oneMoreValue",
+  "oneMoreText2" : "oneMoreValue2"
+}

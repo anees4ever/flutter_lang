@@ -1,0 +1,17 @@
+targets:
+  $default:
+    builders:
+      generators|annotations: # generators|annotations: Refers to the simple_generator builder when dealing with files annotated with annotations.
+        enabled: true
+
+builders:
+  generators:
+    target: ":flutter_lang" # Generator name
+    import: "package:flutter_lang/generators.dart"
+    builder_factories: ["generateFlutterLanguages"] # Builder name(BuilderOption) this is a definition
+    build_extensions: { ".dart": [".core.g.dart", ".lang.g.dart"] }
+    auto_apply: dependents
+    build_to: source
+    #build_to: cache
+    applies_builders: ["source_gen"]
+    #applies_builders: ["source_gen|combining_builder"]
