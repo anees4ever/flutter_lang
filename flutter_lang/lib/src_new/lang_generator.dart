@@ -1,10 +1,10 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:build/src/builder/build_step.dart';
 import 'package:flutter_lang/generators.dart';
 import 'package:flutter_lang/src/model_visitor.dart';
 import 'package:flutter_lang/src_new/generator_classes.dart';
 import 'package:flutter_lang/src_new/generator_helper.dart';
+import 'package:flutter_lang/src_new/generator_provider.dart';
 import 'package:flutter_lang/src_new/lang_demo.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -30,6 +30,7 @@ class LanguageGenerator extends GeneratorForAnnotation<FlutterLangSingleton> {
     String lang = annotation.read('defaultLanguage').stringValue;
     String className = annotation.read('className').stringValue;
     className = className.isEmpty ? visitor.className + 'Helper' : className;
+    bool generateProvider = annotation.read('generateProvider').boolValue;
 
     HelperGenerator helperGenerator = HelperGenerator(
         parentClass: className,
@@ -51,15 +52,22 @@ class LanguageGenerator extends GeneratorForAnnotation<FlutterLangSingleton> {
     String generatedFromJSon = '';
     generatedFromJSon += classGenerator.generatedClassesAsString + '\n\n';
 
-    generatedFromJSon +=
-        '/// final String className= "${visitor.className}"; \n';
-    generatedFromJSon += '/// final String api= "$api"; \n';
-    generatedFromJSon += '/// final String key= "$key"; \n';
-    generatedFromJSon += '/// final String lang= "$lang"; \n\n';
-
     buffer.writeln(generatedFromJSon);
 
     await buildStep.writeAsString(outputId, buffer.toString());
+
+    if (generateProvider) {
+      ProviderGenerator providerGenerator = ProviderGenerator(
+        parentClass: className,
+        defaultLanguage: lang,
+      );
+      providerGenerator.generate();
+
+      final outputId = AssetId(buildStep.inputId.package,
+          buildStep.inputId.path.replaceFirst('.dart', '.provider.g.dart'));
+      await buildStep.writeAsString(
+          outputId, providerGenerator.generatedClassData);
+    }
 
     return helperGenerator.generatedData;
   }

@@ -1,7 +1,7 @@
-import 'package:example/language_change_provider.dart';
+import 'package:example/flutter_lang.g.dart';
+import 'package:example/flutter_lang.provider.g.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +12,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LanguageChangeProvider>(
-      create: (context) => LanguageChangeProvider(),
+    return ChangeNotifierProvider<FlutterLanguageChangeProvider>(
+      create: (context) => FlutterLanguageChangeProvider(
+        currentLangaugeCode: 'ml',
+      ),
       child: Builder(
         builder: (context) => MaterialApp(
-          locale: Provider.of<LanguageChangeProvider>(context, listen: true)
-              .currentLocale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
+          locale:
+              Provider.of<FlutterLanguageChangeProvider>(context, listen: true)
+                  .currentLocale,
+          localizationsDelegates: FlutterLanguage.localizationsDelegates,
+          supportedLocales: FlutterLanguage.supportedLocales,
           title: "Demo",
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -46,9 +49,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     final provider =
-        Provider.of<LanguageChangeProvider>(context, listen: false);
-    provider.changeLocale(
-        provider.currentLocale.languageCode == "hi" ? "en" : "hi");
+        Provider.of<FlutterLanguageChangeProvider>(context, listen: false);
+    //switch to next language in the list of supported languages in the FlutterLanguage class
+    String nextLanguage = FlutterLanguage
+        .supportedLocales[
+            (FlutterLanguage.supportedLocales.indexOf(provider.currentLocale) +
+                    1) %
+                FlutterLanguage.supportedLocales.length]
+        .languageCode;
+
+    provider.changeLocale(nextLanguage);
 
     setState(() {
       _counter++;
@@ -65,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(AppLocalizations.of(context)!.welcomeText),
+        title: Text(FlutterLanguage.of(context)!.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

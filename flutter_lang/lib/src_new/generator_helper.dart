@@ -64,19 +64,24 @@ class HelperGenerator {
     }
     _classData += "  ]; \n\n";
 
+    _classData +=
+        "  static const Map<String, String> supportedLanguages = { \n";
+    for (var lang in availableLanguages.keys) {
+      _classData += "'$lang': '${availableLanguages[lang]}', \n";
+    }
+    _classData += "  }; \n\n";
+
     for (var key in languageData.keys) {
       Map<String, String>? _data = languageData[key];
       if (_data == null) continue;
       if (_data.containsKey('description') &&
           _data['description']!.isNotEmpty) {
-        _classData +=
-            "  /// This is a sample text to show as a welcome text \n";
+        _classData += "  /// ${_data['description']} \n";
         _classData += "  /// \n";
       }
       if (_data.containsKey(defaultLanguage)) {
         _classData +=
-            "  /// In $defaultLanguage, this message translates to: \n";
-        _classData += "  /// **'${_data[defaultLanguage]}'** \n";
+            "  /// [$defaultLanguage]: **'${_data[defaultLanguage]}'** \n";
       }
       _classData += "  String get $key; \n";
     }
@@ -117,10 +122,6 @@ class HelperGenerator {
     _classData +=
         "    default: return ${parentClass}${defaultLanguage.toUpperCase()}(); \n";
     _classData += "  } \n";
-
-    _classData += "throw FlutterError( \n";
-    _classData +=
-        "    'Locale \${locale.languageCode} is not supported by this app'); \n";
 
     _classData += "} \n";
   }

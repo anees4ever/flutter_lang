@@ -41,40 +41,42 @@ abstract class FlutterLanguage {
     Locale('ta'),
   ];
 
-  /// This is a sample text to show as a welcome text
+  static const Map<String, String> supportedLanguages = {
+    'en': 'English',
+    'hi': 'Hindi',
+    'ml': 'Malayalam',
+    'kn': 'Kannada',
+    'ta': 'Tamil',
+  };
+
+  /// A title for the application
   ///
-  /// In en, this message translates to:
-  /// **'Flutter Lang Demo'**
+  /// [en]: **'Flutter Lang Demo'**
   String get title;
 
-  /// This is a sample text to show as a welcome text
+  /// A label on the button to change language
   ///
-  /// In en, this message translates to:
-  /// **'Change Language'**
+  /// [en]: **'Change Language'**
   String get changeLanguage;
 
-  /// This is a sample text to show as a welcome text
+  /// A label to show the current language
   ///
-  /// In en, this message translates to:
-  /// **'Your language is set to %s'**
+  /// [en]: **'Your language is set to %s'**
   String get yourLanguageIsSetTo;
 
-  /// This is a sample text to show as a welcome text
+  /// A sample text to show as a welcome text
   ///
-  /// In en, this message translates to:
-  /// **'Hello World'**
+  /// [en]: **'Hello World'**
   String get helloWorld;
 
-  /// This is a sample text to show as a welcome text
+  /// A label on the Save button
   ///
-  /// In en, this message translates to:
-  /// **'Save'**
+  /// [en]: **'Save'**
   String get save;
 
-  /// This is a sample text to show as a welcome text
+  /// A label on the Cancel button
   ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
+  /// [en]: **'Cancel'**
   String get cancel;
 }
 
@@ -114,6 +116,4 @@ FlutterLanguage readFlutterLanguage(Locale locale) {
     default:
       return FlutterLanguageEN();
   }
-  throw FlutterError(
-      'Locale ${locale.languageCode} is not supported by this app');
 }

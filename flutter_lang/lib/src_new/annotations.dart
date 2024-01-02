@@ -28,10 +28,12 @@ final class FlutterLangSingleton {
   final String apiKey;
   final String defaultLanguage;
   final String className;
+  final bool generateProvider;
   const FlutterLangSingleton({
     required this.apiEndpoint,
     required this.apiKey,
     this.defaultLanguage = 'en',
     this.className = 'FlutterLanguage',
+    this.generateProvider = false,
   });
 }

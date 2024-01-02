@@ -36,7 +36,7 @@ class ClassGenerator {
       }
     }
     for (var lang in _generatedClasses.keys) {
-      _generatedClasses[lang] = _generatedClasses[lang]! + "}";
+      _generatedClasses[lang] = _generatedClasses[lang]! + "} \n";
     }
   }
 
@@ -46,10 +46,10 @@ class ClassGenerator {
 
       String _classData = '';
       _classData +=
-          '/// The translations for ${availableLanguages[lang]} (`$lang`). \n';
+          '  /// The translations for ${availableLanguages[lang]} (`$lang`). \n';
       _classData += 'final class $_className extends ${parentClass} { \n';
       _classData +=
-          '$_className([String locale = "$lang"]) : super(locale);\n\n';
+          '  $_className([String locale = "$lang"]) : super(locale);\n\n';
 
       _generatedClasses[lang] = _classData;
     }
@@ -69,8 +69,8 @@ class ClassGenerator {
     }
 
     if (value != null) {
-      String varStr = '@override \n';
-      varStr += 'String get $key => "$value"; \n\n';
+      String varStr = '  @override \n';
+      varStr += '  String get $key => "$value"; \n\n';
       if (_generatedClasses.containsKey(lang)) {
         _generatedClasses[lang] = _generatedClasses[lang]! + varStr;
       }

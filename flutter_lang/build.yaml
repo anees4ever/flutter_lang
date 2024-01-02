@@ -9,7 +9,7 @@ builders:
     target: ":flutter_lang" # Generator name
     import: "package:flutter_lang/generators.dart"
     builder_factories: ["generateFlutterLanguages"] # Builder name(BuilderOption) this is a definition
-    build_extensions: { ".dart": [".core.g.dart", ".lang.g.dart"] }
+    build_extensions: { ".dart": [".core.g.dart", ".lang.g.dart", ".provider.g.dart"] }
     auto_apply: dependents
     build_to: source
     #build_to: cache
