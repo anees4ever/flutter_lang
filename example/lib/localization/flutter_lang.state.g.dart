@@ -12,8 +12,8 @@ class FlutterLanguageChangeProvider with ChangeNotifier {
     currentLocale = Locale(currentLangaugeCode); 
   } 
 
-  void changeLocale(String locale) { 
-    currentLocale = Locale(locale); 
+  void changeLanguage(String languageCode) { 
+    currentLocale = Locale(languageCode); 
     notifyListeners(); 
   } 
 } 

@@ -1,8 +1,12 @@
+import 'package:flutter_lang/model/language_model.dart';
+import 'package:flutter_lang/model/localization_data_model.dart';
+import 'package:flutter_lang/src_new/annotations.dart';
+
 class HelperGenerator {
   final String parentClass;
   final String langClassImport;
   final String defaultLanguage;
-  final Map<String, String> availableLanguages;
+  final List<LanguagesModel> availableLanguages;
 
   HelperGenerator(
       {required this.parentClass,
@@ -14,18 +18,18 @@ class HelperGenerator {
 
   String get generatedData => _classData;
 
-  generate(Map<String, Map<String, String>> languageData) {
-    _imports();
+  generate(List<LocalizationDataModel> languageData, int stateManagement) {
+    _imports(stateManagement);
 
-    _generateAbstract(languageData);
+    _generateAbstract(languageData, stateManagement);
 
     _getLocalizationDelegate();
   }
 
-  void _imports() {
+  void _imports(int stateManagement) {
     _classData = '';
     _classData +=
-        '/// DO NOT EDIT. This is code generated via package:flutter_lang \n';
+        '// DO NOT EDIT. This is code generated via package:flutter_lang \n';
     _classData += "import 'dart:async'; \n";
 
     _classData += "import 'package:flutter/foundation.dart'; \n";
@@ -34,17 +38,30 @@ class HelperGenerator {
         "import 'package:flutter_localizations/flutter_localizations.dart'; \n";
     _classData += "import 'package:intl/intl.dart' as intl; \n";
     _classData += "import 'package:${langClassImport}'; \n\n";
+    switch (stateManagement) {
+      case StateManagement.GETX:
+        _classData += "import 'package:get/get.dart'; \n\n";
+        _classData +=
+            "import 'package:${langClassImport.replaceFirst('.lang.g.dart', '.state.g.dart')}'; \n\n";
+        break;
+      case StateManagement.PROVIDER:
+        _classData += "import 'package:provider/provider.dart'; \n\n";
+        _classData +=
+            "import 'package:${langClassImport.replaceFirst('.lang.g.dart', '.state.g.dart')}'; \n\n";
+        break;
+    }
   }
 
-  void _generateAbstract(Map<String, Map<String, String>> languageData) {
+  void _generateAbstract(
+      List<LocalizationDataModel> languageData, int stateManagement) {
     _classData += "abstract class $parentClass { \n";
     _classData +=
         "  $parentClass(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString()); \n\n";
     _classData += "  final String localeName; \n\n";
 
-    _classData += "  static $parentClass? of(BuildContext context) { \n";
+    _classData += "  static $parentClass of(BuildContext context) { \n";
     _classData +=
-        "    return Localizations.of<$parentClass>(context, $parentClass); \n";
+        "    return Localizations.of<$parentClass>(context, $parentClass) ?? ${parentClass}${defaultLanguage.toUpperCase()}(); \n";
     _classData += "  } \n\n";
 
     _classData +=
@@ -59,34 +76,61 @@ class HelperGenerator {
     _classData += "  ]; \n\n";
 
     _classData += "  static const List<Locale> supportedLocales = <Locale>[ \n";
-    for (var lang in availableLanguages.keys) {
-      _classData += "    Locale('$lang'), \n";
+    for (var lang in availableLanguages) {
+      _classData += "    Locale('${lang.code}'), \n";
     }
     _classData += "  ]; \n\n";
 
     _classData +=
         "  static const Map<String, String> supportedLanguages = { \n";
-    for (var lang in availableLanguages.keys) {
-      _classData += "'$lang': '${availableLanguages[lang]}', \n";
+    for (var lang in availableLanguages) {
+      _classData += "'${lang.code}': '${lang.name}', \n";
     }
     _classData += "  }; \n\n";
 
-    for (var key in languageData.keys) {
-      Map<String, String>? _data = languageData[key];
-      if (_data == null) continue;
-      if (_data.containsKey('description') &&
-          _data['description']!.isNotEmpty) {
-        _classData += "  /// ${_data['description']} \n";
+    for (var data in languageData) {
+      if (data.description.isNotEmpty) {
+        _classData += "  /// ${data.description} \n";
         _classData += "  /// \n";
       }
-      if (_data.containsKey(defaultLanguage)) {
+      if (data.values.containsKey(defaultLanguage)) {
         _classData +=
-            "  /// [$defaultLanguage]: **'${_data[defaultLanguage]}'** \n";
+            "  /// [$defaultLanguage]: **'${data.values[defaultLanguage]}'** \n";
       }
-      _classData += "  String get $key; \n";
+      _classData += "  String get ${data.key}; \n";
     }
 
-    _classData += "} \n";
+    _classData += "} \n\n";
+    switch (stateManagement) {
+      case StateManagement.GETX:
+        _classData += "void setCurrent${parentClass}(String languageCode) { \n";
+        _classData +=
+            "  ${parentClass}GetXController controller= Get.find(); \n";
+        _classData += "  controller.changeLanguage(languageCode); \n";
+        _classData += "} \n\n";
+
+        _classData += "Locale getCurrent${parentClass}() { \n";
+        _classData +=
+            "  ${parentClass}GetXController controller= Get.find(); \n";
+        _classData += "  return controller.getCurrentLocale; \n";
+        _classData += "} \n\n";
+        break;
+      case StateManagement.PROVIDER:
+        _classData +=
+            "void setCurrent${parentClass}(BuildContext context, String languageCode) { \n";
+        _classData +=
+            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
+        _classData += "  provider.changeLanguage(languageCode); \n";
+        _classData += "} \n\n";
+
+        _classData +=
+            "Locale getCurrent${parentClass}(BuildContext context) { \n";
+        _classData +=
+            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
+        _classData += "  return provider.getCurrentLocale; \n";
+        _classData += "} \n\n";
+        break;
+    }
   }
 
   void _getLocalizationDelegate() {
@@ -102,8 +146,8 @@ class HelperGenerator {
 
     _classData += "  @override \n";
     _classData += "  bool isSupported(Locale locale) => <String>[ \n";
-    for (var lang in availableLanguages.keys) {
-      _classData += "    '$lang', \n";
+    for (var lang in availableLanguages) {
+      _classData += "    '${lang.code}', \n";
     }
     _classData += "  ].contains(locale.languageCode); \n\n";
 
@@ -115,9 +159,9 @@ class HelperGenerator {
 
     _classData += "$parentClass read$parentClass(Locale locale) { \n";
     _classData += "  switch (locale.languageCode) { \n";
-    for (var lang in availableLanguages.keys) {
+    for (var lang in availableLanguages) {
       _classData +=
-          "    case '$lang': return ${parentClass}${lang.toUpperCase()}(); \n";
+          "    case '${lang.code}': return ${parentClass}${lang.code.toUpperCase()}(); \n";
     }
     _classData +=
         "    default: return ${parentClass}${defaultLanguage.toUpperCase()}(); \n";

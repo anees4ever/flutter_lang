@@ -1,6 +1,6 @@
 /*===========LANGUAGE CLASSES===========*/
 /// DO NOT EDIT. This is code generated via package:flutter_lang 
-import 'package:example/flutter_lang.g.dart'; 
+import 'package:example/localization/flutter_lang.core.g.dart'; 
 
   /// The translations for English (`en`). 
 final class FlutterLanguageEN extends FlutterLanguage { 

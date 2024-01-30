@@ -10,7 +10,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:example/flutter_lang.lang.g.dart';
+import 'package:example/localization/flutter_lang.lang.g.dart';
+
+import 'package:provider/provider.dart';
+
+import 'package:example/localization/flutter_lang.state.g.dart';
 
 abstract class FlutterLanguage {
   FlutterLanguage(String locale)
@@ -78,6 +82,18 @@ abstract class FlutterLanguage {
   ///
   /// [en]: **'Cancel'**
   String get cancel;
+}
+
+void setCurrentFlutterLanguage(BuildContext context, String languageCode) {
+  final provider =
+      Provider.of<FlutterLanguageChangeProvider>(context, listen: false);
+  provider.changeLanguage(languageCode);
+}
+
+Locale getCurrentFlutterLanguage(BuildContext context) {
+  final provider =
+      Provider.of<FlutterLanguageChangeProvider>(context, listen: false);
+  return provider.getCurrentLocale;
 }
 
 class _FlutterLanguageDelegate extends LocalizationsDelegate<FlutterLanguage> {

@@ -1,8 +1,11 @@
+import 'package:flutter_lang/model/language_model.dart';
+import 'package:flutter_lang/model/localization_data_model.dart';
+
 class ClassGenerator {
   final String parentClass;
   final String langClassImport;
   final String defaultLanguage;
-  final Map<String, String> availableLanguages;
+  final List<LanguagesModel> availableLanguages;
 
   Map<String, String> _generatedClasses = {};
   Map<String, String> get generatedClasses => _generatedClasses;
@@ -11,7 +14,7 @@ class ClassGenerator {
     String _classes = '';
     _classes += '/*===========LANGUAGE CLASSES===========*/\n';
     _classes +=
-        '/// DO NOT EDIT. This is code generated via package:flutter_lang \n';
+        '// DO NOT EDIT. This is code generated via package:flutter_lang \n';
     _classes += "import 'package:${langClassImport}'; \n\n";
 
     for (var key in _generatedClasses.keys) {
@@ -27,12 +30,12 @@ class ClassGenerator {
       required this.availableLanguages});
 
   //generate class for each available language based on the demo data and add fields to the generated class
-  void generateClasses(Map<String, Map<String, String>> languageData) {
+  void generateClasses(List<LocalizationDataModel> languageData) {
     _initializeAllClasses();
 
-    for (var key in languageData.keys) {
-      for (var lang in availableLanguages.keys) {
-        _insertVariableToClass(languageData, key, lang);
+    for (var data in languageData) {
+      for (var lang in availableLanguages) {
+        _insertVariableToClass(data, lang.code);
       }
     }
     for (var lang in _generatedClasses.keys) {
@@ -41,38 +44,36 @@ class ClassGenerator {
   }
 
   _initializeAllClasses() {
-    for (var lang in availableLanguages.keys) {
-      String _className = '${parentClass}${lang.toUpperCase()}';
+    for (var lang in availableLanguages) {
+      String _className = '${parentClass}${lang.code.toUpperCase()}';
 
       String _classData = '';
       _classData +=
-          '  /// The translations for ${availableLanguages[lang]} (`$lang`). \n';
+          '  /// The translations for ${lang.name} (`${lang.code}`). \n';
       _classData += 'final class $_className extends ${parentClass} { \n';
-      _classData +=
-          '  $_className([String locale = "$lang"]) : super(locale);\n\n';
+      _classData += '  $_className([super.locale = "${lang.code}"]);\n\n';
 
-      _generatedClasses[lang] = _classData;
+      _generatedClasses[lang.code] = _classData;
     }
   }
 
-  _insertVariableToClass(
-      Map<String, Map<String, String>> languageData, String key, String lang) {
-    if (languageData[key] == null) {
+  _insertVariableToClass(LocalizationDataModel data, String langCode) {
+    if (data.key.isEmpty || data.values.isEmpty) {
       return;
     }
 
     String? value;
-    if (languageData[key]!.containsKey(lang)) {
-      value = languageData[key]![lang];
-    } else if (lang != defaultLanguage) {
-      value = languageData[key]![defaultLanguage];
+    if (data.values.containsKey(langCode)) {
+      value = data.values[langCode];
+    } else if (langCode != defaultLanguage) {
+      value = data.values[defaultLanguage];
     }
 
     if (value != null) {
       String varStr = '  @override \n';
-      varStr += '  String get $key => "$value"; \n\n';
-      if (_generatedClasses.containsKey(lang)) {
-        _generatedClasses[lang] = _generatedClasses[lang]! + varStr;
+      varStr += '  String get ${data.key} => "$value"; \n\n';
+      if (_generatedClasses.containsKey(langCode)) {
+        _generatedClasses[langCode] = _generatedClasses[langCode]! + varStr;
       }
     }
   }
