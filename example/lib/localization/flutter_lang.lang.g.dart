@@ -1,10 +1,10 @@
 /*===========LANGUAGE CLASSES===========*/
-/// DO NOT EDIT. This is code generated via package:flutter_lang 
+// DO NOT EDIT. This is code generated via package:flutter_lang 
 import 'package:example/localization/flutter_lang.core.g.dart'; 
 
   /// The translations for English (`en`). 
-final class FlutterLanguageEN extends FlutterLanguage { 
-  FlutterLanguageEN([String locale = "en"]) : super(locale);
+final class TranslationsHelperEN extends TranslationsHelper { 
+  TranslationsHelperEN([super.locale = "en"]);
 
   @override 
   String get title => "Flutter Lang Demo"; 
@@ -28,8 +28,8 @@ final class FlutterLanguageEN extends FlutterLanguage {
 
 
   /// The translations for Hindi (`hi`). 
-final class FlutterLanguageHI extends FlutterLanguage { 
-  FlutterLanguageHI([String locale = "hi"]) : super(locale);
+final class TranslationsHelperHI extends TranslationsHelper { 
+  TranslationsHelperHI([super.locale = "hi"]);
 
   @override 
   String get title => "फ्लटर भाषा डेमो"; 
@@ -53,8 +53,8 @@ final class FlutterLanguageHI extends FlutterLanguage {
 
 
   /// The translations for Malayalam (`ml`). 
-final class FlutterLanguageML extends FlutterLanguage { 
-  FlutterLanguageML([String locale = "ml"]) : super(locale);
+final class TranslationsHelperML extends TranslationsHelper { 
+  TranslationsHelperML([super.locale = "ml"]);
 
   @override 
   String get title => "ഫ്ലട്ടർ ഭാഷ ഡെമോ"; 
@@ -78,8 +78,8 @@ final class FlutterLanguageML extends FlutterLanguage {
 
 
   /// The translations for Kannada (`kn`). 
-final class FlutterLanguageKN extends FlutterLanguage { 
-  FlutterLanguageKN([String locale = "kn"]) : super(locale);
+final class TranslationsHelperKN extends TranslationsHelper { 
+  TranslationsHelperKN([super.locale = "kn"]);
 
   @override 
   String get title => "ಫ್ಲಟರ್ ಭಾಷಾ ಡೆಮೊ"; 
@@ -103,8 +103,8 @@ final class FlutterLanguageKN extends FlutterLanguage {
 
 
   /// The translations for Tamil (`ta`). 
-final class FlutterLanguageTA extends FlutterLanguage { 
-  FlutterLanguageTA([String locale = "ta"]) : super(locale);
+final class TranslationsHelperTA extends TranslationsHelper { 
+  TranslationsHelperTA([super.locale = "ta"]);
 
   @override 
   String get title => "ஃப்ளட்டர் மொழி டெமோ"; 

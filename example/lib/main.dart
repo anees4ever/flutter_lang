@@ -36,17 +36,17 @@ class ProviderExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<FlutterLanguageChangeProvider>(
-      create: (context) => FlutterLanguageChangeProvider(
+    return ChangeNotifierProvider<TranslationsHelperChangeProvider>(
+      create: (context) => TranslationsHelperChangeProvider(
         currentLangaugeCode: 'ml',
       ),
       child: Builder(
         builder: (context) => MaterialApp(
-          locale:
-              Provider.of<FlutterLanguageChangeProvider>(context, listen: true)
-                  .currentLocale,
-          localizationsDelegates: FlutterLanguage.localizationsDelegates,
-          supportedLocales: FlutterLanguage.supportedLocales,
+          locale: Provider.of<TranslationsHelperChangeProvider>(context,
+                  listen: true)
+              .currentLocale,
+          localizationsDelegates: TranslationsHelper.localizationsDelegates,
+          supportedLocales: TranslationsHelper.supportedLocales,
           title: "Flutter_Lang Demo",
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

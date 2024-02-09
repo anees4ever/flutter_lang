@@ -46,7 +46,7 @@ final class FlutterLangSingleton {
     required this.apiEndpoint,
     required this.apiKey,
     this.defaultLanguage = 'en',
-    this.className = 'FlutterLanguage',
+    this.className = '',
     this.stateManagement = StateManagement.NONE,
   })  : source = LanguageSource.API,
         localFile = '';
@@ -54,7 +54,7 @@ final class FlutterLangSingleton {
   const FlutterLangSingleton.local({
     required this.localFile,
     this.defaultLanguage = 'en',
-    this.className = 'FlutterLanguage',
+    this.className = '',
     this.stateManagement = StateManagement.NONE,
   })  : source = LanguageSource.LOCAL,
         apiEndpoint = '',

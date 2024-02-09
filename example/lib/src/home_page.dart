@@ -12,13 +12,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    Locale nextLanguage = FlutterLanguage.supportedLocales[(FlutterLanguage
-                .supportedLocales
-                .indexOf(getCurrentFlutterLanguage(context)) +
-            1) %
-        FlutterLanguage.supportedLocales.length];
+    Locale nextLanguage = TranslationsHelper.supportedLocales[
+        (TranslationsHelper.supportedLocales
+                    .indexOf(TranslationsHelper.getCurrentLanguage(context)) +
+                1) %
+            TranslationsHelper.supportedLocales.length];
 
-    setCurrentFlutterLanguage(context, nextLanguage.languageCode);
+    TranslationsHelper.setCurrentLanguage(context, nextLanguage.languageCode);
 
     setState(() {
       _counter++;
@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(FlutterLanguage.of(context)!.title),
+        title: Text(TranslationsHelper.of(context).title),
       ),
       body: Center(
         child: Column(

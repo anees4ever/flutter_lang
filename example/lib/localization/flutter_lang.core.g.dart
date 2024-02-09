@@ -4,7 +4,7 @@
 // LanguageGenerator
 // **************************************************************************
 
-/// DO NOT EDIT. This is code generated via package:flutter_lang
+// DO NOT EDIT. This is code generated via package:flutter_lang
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -16,18 +16,19 @@ import 'package:provider/provider.dart';
 
 import 'package:example/localization/flutter_lang.state.g.dart';
 
-abstract class FlutterLanguage {
-  FlutterLanguage(String locale)
+abstract class TranslationsHelper {
+  TranslationsHelper(String locale)
       : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static FlutterLanguage? of(BuildContext context) {
-    return Localizations.of<FlutterLanguage>(context, FlutterLanguage);
+  static TranslationsHelper of(BuildContext context) {
+    return Localizations.of<TranslationsHelper>(context, TranslationsHelper) ??
+        TranslationsHelperEN();
   }
 
-  static const LocalizationsDelegate<FlutterLanguage> delegate =
-      _FlutterLanguageDelegate();
+  static const LocalizationsDelegate<TranslationsHelper> delegate =
+      _TranslationsHelperDelegate();
 
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
@@ -52,6 +53,18 @@ abstract class FlutterLanguage {
     'kn': 'Kannada',
     'ta': 'Tamil',
   };
+
+  static void setCurrentLanguage(BuildContext context, String languageCode) {
+    final provider =
+        Provider.of<TranslationsHelperChangeProvider>(context, listen: false);
+    provider.changeLanguage(languageCode);
+  }
+
+  static Locale getCurrentLanguage(BuildContext context) {
+    final provider =
+        Provider.of<TranslationsHelperChangeProvider>(context, listen: false);
+    return provider.getCurrentLocale;
+  }
 
   /// A title for the application
   ///
@@ -84,24 +97,31 @@ abstract class FlutterLanguage {
   String get cancel;
 }
 
-void setCurrentFlutterLanguage(BuildContext context, String languageCode) {
-  final provider =
-      Provider.of<FlutterLanguageChangeProvider>(context, listen: false);
-  provider.changeLanguage(languageCode);
+extension TranslationsHelperStringExtension on String {
+  String withParam(dynamic param) {
+    return withParams([param]);
+  }
+
+  String withParams(List<dynamic> params) {
+    //return the string itself if no params are passed
+    if (params.isEmpty) return this;
+    //replace the placeholder %s with the params in the order they are passed
+    String result = this;
+    for (int i = 0; i < params.length; i++) {
+      result = result.replaceFirst('%s', params[i].toString());
+    }
+    return result;
+  }
 }
 
-Locale getCurrentFlutterLanguage(BuildContext context) {
-  final provider =
-      Provider.of<FlutterLanguageChangeProvider>(context, listen: false);
-  return provider.getCurrentLocale;
-}
-
-class _FlutterLanguageDelegate extends LocalizationsDelegate<FlutterLanguage> {
-  const _FlutterLanguageDelegate();
+class _TranslationsHelperDelegate
+    extends LocalizationsDelegate<TranslationsHelper> {
+  const _TranslationsHelperDelegate();
 
   @override
-  Future<FlutterLanguage> load(Locale locale) {
-    return SynchronousFuture<FlutterLanguage>(readFlutterLanguage(locale));
+  Future<TranslationsHelper> load(Locale locale) {
+    return SynchronousFuture<TranslationsHelper>(
+        readTranslationsHelper(locale));
   }
 
   @override
@@ -114,22 +134,22 @@ class _FlutterLanguageDelegate extends LocalizationsDelegate<FlutterLanguage> {
       ].contains(locale.languageCode);
 
   @override
-  bool shouldReload(_FlutterLanguageDelegate old) => false;
+  bool shouldReload(_TranslationsHelperDelegate old) => false;
 }
 
-FlutterLanguage readFlutterLanguage(Locale locale) {
+TranslationsHelper readTranslationsHelper(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
-      return FlutterLanguageEN();
+      return TranslationsHelperEN();
     case 'hi':
-      return FlutterLanguageHI();
+      return TranslationsHelperHI();
     case 'ml':
-      return FlutterLanguageML();
+      return TranslationsHelperML();
     case 'kn':
-      return FlutterLanguageKN();
+      return TranslationsHelperKN();
     case 'ta':
-      return FlutterLanguageTA();
+      return TranslationsHelperTA();
     default:
-      return FlutterLanguageEN();
+      return TranslationsHelperEN();
   }
 }

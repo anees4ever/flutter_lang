@@ -88,6 +88,46 @@ class HelperGenerator {
     }
     _classData += "  }; \n\n";
 
+    switch (stateManagement) {
+      case StateManagement.GETX:
+        _classData +=
+            "static void setCurrentLanguage(String languageCode) { \n";
+        _classData +=
+            "  ${parentClass}GetXController controller= Get.find(); \n";
+        _classData += "  controller.changeLanguage(languageCode); \n";
+        _classData += "} \n\n";
+
+        _classData += "static Locale getCurrentLanguage() { \n";
+        _classData +=
+            "  ${parentClass}GetXController controller= Get.find(); \n";
+        _classData += "  return controller.getCurrentLocale; \n";
+        _classData += "} \n\n";
+
+        _classData +=
+            "static FlutterLanguage get current => Get.context == null \n";
+        _classData += "    ? FlutterLanguageEN() \n";
+        _classData += "    : FlutterLanguage.of(Get.context!); \n";
+        _classData += "\n\n";
+
+        break;
+      case StateManagement.PROVIDER:
+        _classData +=
+            "static void setCurrentLanguage(BuildContext context, String languageCode) { \n";
+        _classData +=
+            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
+        _classData += "  provider.changeLanguage(languageCode); \n";
+        _classData += "} \n\n";
+
+        _classData +=
+            "static Locale getCurrentLanguage(BuildContext context) { \n";
+        _classData +=
+            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
+        _classData += "  return provider.getCurrentLocale; \n";
+        _classData += "} \n\n";
+        break;
+    }
+    _classData += "\n";
+
     for (var data in languageData) {
       if (data.description.isNotEmpty) {
         _classData += "  /// ${data.description} \n";
@@ -101,36 +141,25 @@ class HelperGenerator {
     }
 
     _classData += "} \n\n";
-    switch (stateManagement) {
-      case StateManagement.GETX:
-        _classData += "void setCurrent${parentClass}(String languageCode) { \n";
-        _classData +=
-            "  ${parentClass}GetXController controller= Get.find(); \n";
-        _classData += "  controller.changeLanguage(languageCode); \n";
-        _classData += "} \n\n";
 
-        _classData += "Locale getCurrent${parentClass}() { \n";
-        _classData +=
-            "  ${parentClass}GetXController controller= Get.find(); \n";
-        _classData += "  return controller.getCurrentLocale; \n";
-        _classData += "} \n\n";
-        break;
-      case StateManagement.PROVIDER:
-        _classData +=
-            "void setCurrent${parentClass}(BuildContext context, String languageCode) { \n";
-        _classData +=
-            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
-        _classData += "  provider.changeLanguage(languageCode); \n";
-        _classData += "} \n\n";
-
-        _classData +=
-            "Locale getCurrent${parentClass}(BuildContext context) { \n";
-        _classData +=
-            "  final provider = Provider.of<${parentClass}ChangeProvider>(context, listen: false); \n";
-        _classData += "  return provider.getCurrentLocale; \n";
-        _classData += "} \n\n";
-        break;
-    }
+    _classData += "extension ${parentClass}StringExtension on String {\n";
+    _classData += "  String withParam(dynamic param) {\n";
+    _classData += "    return withParams([param]);\n";
+    _classData += "  }\n";
+    _classData += "\n";
+    _classData += "  String withParams(List<dynamic> params) {\n";
+    _classData += "    //return the string itself if no params are passed\n";
+    _classData += "    if (params.isEmpty) return this;\n";
+    _classData +=
+        "    //replace the placeholder %s with the params in the order they are passed\n";
+    _classData += "    String result = this;\n";
+    _classData += "    for (int i = 0; i < params.length; i++) {\n";
+    _classData +=
+        "      result = result.replaceFirst('%s', params[i].toString());\n";
+    _classData += "    }\n";
+    _classData += "    return result;\n";
+    _classData += "  }\n";
+    _classData += "}\n\n";
   }
 
   void _getLocalizationDelegate() {

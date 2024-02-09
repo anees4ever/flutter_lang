@@ -31,9 +31,8 @@ class LanguageGenerator extends GeneratorForAnnotation<FlutterLangSingleton> {
     String apiKey = annotation.read('apiKey').stringValue;
     String lang = annotation.read('defaultLanguage').stringValue;
     String className = annotation.read('className').stringValue;
-    className = className.isEmpty
-        ? element.runtimeType.toString() + 'Helper'
-        : className;
+    className =
+        className.isEmpty ? element.name.toString() + 'Helper' : className;
     int stateManagement = annotation.read('stateManagement').intValue;
 
     List<LanguagesModel> available_languages = [];
