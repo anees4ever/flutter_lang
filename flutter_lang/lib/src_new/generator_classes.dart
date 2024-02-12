@@ -63,7 +63,7 @@ class ClassGenerator {
     }
 
     String? value;
-    if (data.values.containsKey(langCode)) {
+    if (data.values.containsKey(langCode) && data.values[langCode]!.isNotEmpty) {
       value = data.values[langCode];
     } else if (langCode != defaultLanguage) {
       value = data.values[defaultLanguage];
