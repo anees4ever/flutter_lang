@@ -49,7 +49,7 @@ class ClassGenerator {
 
       String _classData = '';
       _classData +=
-          '  /// The translations for ${lang.name} (`${lang.code}`). \n';
+          '/// The translations for ${lang.name} (`${lang.code}`). \n';
       _classData += 'class $_className extends ${parentClass} { \n';
       _classData += '  $_className([super.locale = "${lang.code}"]);\n\n';
 
